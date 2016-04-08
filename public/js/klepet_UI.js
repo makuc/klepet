@@ -139,6 +139,10 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
+function pokaziYoutube(vhodnoBesedilo)
+{
+  return "";
+}
 function pokaziSlike(vhodnoBesedilo) {
   var i = vhodnoBesedilo.indexOf("http://");
   var is = vhodnoBesedilo.indexOf("https://");

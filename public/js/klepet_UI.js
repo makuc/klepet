@@ -167,6 +167,7 @@ function pokaziSlike(vhodnoBesedilo) {
   }
   output += vhodnoBesedilo; // Dodamo še preostanek besedila...
   
+  // Ponastavi, da obdelaš še HTTPS povezave na slike
   vhodnoBesedilo = output;
   output = "";
   

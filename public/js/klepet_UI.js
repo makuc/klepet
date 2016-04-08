@@ -2,7 +2,7 @@ function divElementEnostavniTekst(sporocilo) {
   var jeYoutube= sporocilo.indexOf('http://') > -1 || sporocilo.indexOf('https://') > -1;
   if (jeYoutube) {
     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
-    sporocilo = pokaziSlike(sporocilo);
+    sporocilo = pokaziYoutube(sporocilo);
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
@@ -16,7 +16,6 @@ function divElementHtmlTekst(sporocilo) {
 function procesirajVnosUporabnika(klepetApp, socket) {
   var sporocilo = $('#poslji-sporocilo').val();
   sporocilo = dodajSmeske(sporocilo);
-  sporocilo = dodajYoutube(sporocilo);
   var sistemskoSporocilo;
 
   if (sporocilo.charAt(0) == '/') {
@@ -133,23 +132,34 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
-function dodajYoutube(vhodnoBesedilo) {
-  var startSearch = 0;
+function pokaziYoutube(vhodnoBesedilo) {
+  var i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=");
   
-  var i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=", startSearch);
+  var output = "";
   
-  while (i != -1)
-  {// preglej vse zahteve začenši s "http://"
+  while (i > -1)
+  {
+    
+    // Dodaj v output ves tekst do i
+    output += vhodnoBesedilo.substring(0, i);
+    // Dodano
+    
     var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
     if(iEnd == -1)
       iEnd = vhodnoBesedilo.length;
-    var identifikator = vhodnoBesedilo.substring(i + 32, iEnd);
-    startSearch = i + 80;
     
-    vhodnoBesedilo = vhodnoBesedilo.replace("https://www.youtube.com/watch?v=" + identifikator,
-      "<iframe src='https://www.youtube.com/embed/" + identifikator + "' allowfullscreen></iframe>");
+    var link = vhodnoBesedilo.substring(i, iEnd);
+    var id = vhodnoBesedilo.substring(i+32, iEnd);
     
-    i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=", startSearch);
+    if(id.length > 7 && id.length < 15)
+    {
+      output += "<iframe src='https://www.youtube.com/embed/" + id + "' width='200' height='150' allowfullscreen></iframe>";
+    }
+    // Odstrani že obdelan del besedila
+    vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
+    
+    i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=u2l6nk7pMQ0");
   }
-  return vhodnoBesedilo;
+  output += vhodnoBesedilo; // Dodamo še preostanek besedila...
+  return output;
 }

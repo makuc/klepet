@@ -135,31 +135,30 @@ function dodajSmeske(vhodnoBesedilo) {
 function pokaziYoutube(vhodnoBesedilo) {
   var i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=");
   
-  var output = "";
+  // Dodaj v output ves tekst
+  var output = "<p>" + vhodnoBesedilo + "</p>";
+  // Dodano
   
   while (i > -1)
   {
     
-    // Dodaj v output ves tekst do i
-    output += vhodnoBesedilo.substring(0, i);
-    // Dodano
+    
     
     var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
     if(iEnd == -1)
       iEnd = vhodnoBesedilo.length;
     
-    var link = vhodnoBesedilo.substring(i, iEnd);
     var id = vhodnoBesedilo.substring(i+32, iEnd);
     
     if(id.length > 7 && id.length < 15)
     {
-      output += "<iframe src='https://www.youtube.com/embed/" + id + "' width='200' height='150' allowfullscreen></iframe>";
+      output += "<iframe src='https://www.youtube.com/embed/" + id + "' width='200' height='150' style='margin-left: 20px;' allowfullscreen></iframe>";
     }
     // Odstrani že obdelan del besedila
     vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
     
-    i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=u2l6nk7pMQ0");
+    i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=");
   }
-  output += vhodnoBesedilo; // Dodamo še preostanek besedila...
+  
   return output;
 }

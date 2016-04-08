@@ -158,7 +158,7 @@ function pokaziSlike(vhodnoBesedilo) {
       if(link.indexOf("http://sandbox.lavbic.net/teaching/OIS/gradivo/") > -1)
         output += "<img src='" + link + "' />";
       else
-        output += "<img src='" + link + "' width='200' style='margin-left:20px;' />";
+        output += "<a href='" + link + "'><img src='" + link + "' width='200' style='margin-left:20px;' /></a>";
     }
     // Odstrani že obdelan del besedila
     vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");

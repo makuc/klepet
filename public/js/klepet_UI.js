@@ -166,5 +166,39 @@ function pokaziSlike(vhodnoBesedilo) {
     i = vhodnoBesedilo.indexOf("http://");
   }
   output += vhodnoBesedilo; // Dodamo še preostanek besedila...
+  
+  vhodnoBesedilo = output;
+  output = "";
+  
+  var i = vhodnoBesedilo.indexOf("https://");
+  
+  while (i > -1)
+  {// preglej vse zahteve začenši s "http://"
+    
+    // Dodaj v output ves tekst do i
+    output += vhodnoBesedilo.substring(0, i);
+    // Dodano
+    
+    var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
+    if(iEnd == -1)
+      iEnd = vhodnoBesedilo.length;
+    var link = vhodnoBesedilo.substring(i, iEnd);
+    
+    var last4chars = link.substr((link.length-4) , 4);
+    
+    if(last4chars == '.jpg' || last4chars == '.gif' || last4chars == '.png')
+    {
+      if(link.indexOf("http://sandbox.lavbic.net/teaching/OIS/gradivo/") > -1)
+        output += "<img src='" + link + "' />";
+      else
+        output += "<a href='" + link + "'><img src='" + link + "' width='200' style='margin-left:20px;' /></a>";
+    }
+    // Odstrani že obdelan del besedila
+    vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
+    
+    i = vhodnoBesedilo.indexOf("http://");
+  }
+  output += vhodnoBesedilo; // Dodamo še preostanek besedila...
+  
   return output;
 }

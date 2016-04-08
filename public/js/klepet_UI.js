@@ -3,6 +3,8 @@ function divElementEnostavniTekst(sporocilo) {
   if (jeSlika) {
     sporocilo = sporocilo.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
     sporocilo = pokaziSlike(sporocilo);
+    sporocilo = pokaziYoutube(sporocilo);
+    
     return $('<div style="font-weight: bold"></div>').html(sporocilo);
   } else {
     return $('<div style="font-weight: bold;"></div>').text(sporocilo);
@@ -139,11 +141,39 @@ function dodajSmeske(vhodnoBesedilo) {
   }
   return vhodnoBesedilo;
 }
+function pokaziYoutube(vhodnoBesedilo) {
+  var i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=");
+  
+  // Dodaj v output ves tekst
+  var output = vhodnoBesedilo;
+  // Dodano
+  
+  vhodnoBesedilo = vhodnoBesedilo.replace("</p>", "");
+  while (i > -1)
+  {
+    var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
+    if(iEnd == -1)
+      iEnd = vhodnoBesedilo.length;
+    
+    var id = vhodnoBesedilo.substring(i+32, iEnd);
+    
+    if(id.length > 7 && id.length < 15)
+    {
+      output += "<iframe src='https://www.youtube.com/embed/" + id + "' width='200' height='150' style='margin-left: 20px;' allowfullscreen></iframe>";
+    }
+    // Odstrani že obdelan del besedila
+    vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
+    
+    i = vhodnoBesedilo.indexOf("https://www.youtube.com/watch?v=");
+  }
+  
+  return output;
+}
 function pokaziSlike(vhodnoBesedilo) {
   var i = vhodnoBesedilo.indexOf("http://");
   var is = vhodnoBesedilo.indexOf("https://");
   
-  var output = "<p>" + vhodnoBesedilo + "</p><p>";
+  var output = "<p>" + vhodnoBesedilo + " </p>";
   
   var updated = false;
   
@@ -163,8 +193,11 @@ function pokaziSlike(vhodnoBesedilo) {
     {
       if(link.indexOf("http://sandbox.lavbic.net/teaching/OIS/gradivo/") > -1)
         output = output.replace(link, "<img src='" + link + "' />");
-      else
+      else {
+        if(!updated)
+          output += "<br>";
         output += "<a href='" + link + "'><img src='" + link + "' width='200' style='margin-left:20px;' /></a>";
+      }
       updated = true;
     }
     // Odstrani že obdelan del besedila
@@ -172,13 +205,6 @@ function pokaziSlike(vhodnoBesedilo) {
     
     i = vhodnoBesedilo.indexOf("http://");
     is = vhodnoBesedilo.indexOf("https://");
-  }
-  if(!updated)
-  {
-    output.substr(0, output.length - 3)
-  } else
-  {
-    output += "</p>";
   }
   return output;
 }

@@ -136,15 +136,16 @@ function dodajSmeske(vhodnoBesedilo) {
 }
 function pokaziSlike(vhodnoBesedilo) {
   var i = vhodnoBesedilo.indexOf("http://");
+  var is = vhodnoBesedilo.indexOf("https://");
   
-  var output = "";
+  var output = "<p>" + vhodnoBesedilo + "</p><p>";
   
-  while (i > -1)
+  var updated = false;
+  
+  while (i > -1 || is > -1)
   {// preglej vse zahteve začenši s "http://"
-    
-    // Dodaj v output ves tekst do i
-    output += vhodnoBesedilo.substring(0, i);
-    // Dodano
+    if((i > is && is != -1) || i == -1)
+      i = is;
     
     var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
     if(iEnd == -1)
@@ -156,50 +157,23 @@ function pokaziSlike(vhodnoBesedilo) {
     if(last4chars == '.jpg' || last4chars == '.gif' || last4chars == '.png')
     {
       if(link.indexOf("http://sandbox.lavbic.net/teaching/OIS/gradivo/") > -1)
-        output += "<img src='" + link + "' />";
+        output = output.replace(link, "<img src='" + link + "' />");
       else
         output += "<a href='" + link + "'><img src='" + link + "' width='200' style='margin-left:20px;' /></a>";
+      updated = true;
     }
     // Odstrani že obdelan del besedila
     vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
     
     i = vhodnoBesedilo.indexOf("http://");
+    is = vhodnoBesedilo.indexOf("https://");
   }
-  output += vhodnoBesedilo; // Dodamo še preostanek besedila...
-  
-  // Ponastavi, da obdelaš še HTTPS povezave na slike
-  vhodnoBesedilo = output;
-  output = "";
-  
-  var i = vhodnoBesedilo.indexOf("https://");
-  
-  while (i > -1)
-  {// preglej vse zahteve začenši s "http://"
-    
-    // Dodaj v output ves tekst do i
-    output += vhodnoBesedilo.substring(0, i);
-    // Dodano
-    
-    var iEnd = vhodnoBesedilo.indexOf(" ", (i+1));
-    if(iEnd == -1)
-      iEnd = vhodnoBesedilo.length;
-    var link = vhodnoBesedilo.substring(i, iEnd);
-    
-    var last4chars = link.substr((link.length-4) , 4);
-    
-    if(last4chars == '.jpg' || last4chars == '.gif' || last4chars == '.png')
-    {
-      if(link.indexOf("http://sandbox.lavbic.net/teaching/OIS/gradivo/") > -1)
-        output += "<img src='" + link + "' />";
-      else
-        output += "<a href='" + link + "'><img src='" + link + "' width='200' style='margin-left:20px;' /></a>";
-    }
-    // Odstrani že obdelan del besedila
-    vhodnoBesedilo = vhodnoBesedilo.replace(vhodnoBesedilo.substring(0, iEnd), "");
-    
-    i = vhodnoBesedilo.indexOf("http://");
+  if(!updated)
+  {
+    output.substr(0, output.length - 3)
+  } else
+  {
+    output += "</p>";
   }
-  output += vhodnoBesedilo; // Dodamo še preostanek besedila...
-  
   return output;
 }
